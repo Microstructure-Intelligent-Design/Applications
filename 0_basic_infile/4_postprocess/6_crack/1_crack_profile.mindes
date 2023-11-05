@@ -6,6 +6,8 @@ Solver.Mesh.Nx = 100
 Solver.Mesh.Ny = 1
 Solver.Mesh.Nz = 1
 
+Solver.Loop.vts_output_step = 100
+
 Solver.Phases = {[(Grain0),()]} 
 
 ###### Microstructure

@@ -6,6 +6,8 @@ Solver.Mesh.Nx = 100
 Solver.Mesh.Ny = 100
 Solver.Mesh.Nz = 1
 Postprocess.PCT.VTS.phi_index = true
+Solver.Loop.vts_output_step = 100
+Solver.Loop.data_output_step = 100
 
 Solver.Phases = {[(Grain0),()]} 
 

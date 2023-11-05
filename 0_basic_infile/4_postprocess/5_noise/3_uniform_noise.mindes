@@ -12,6 +12,9 @@ Solver.Parallel.openmp_thread_counts = 5
 Solver.PCT.TimeInterval.dt = 0.01
 Solver.Phi.is_normalize = true
 
+Solver.Loop.vts_output_step = 100
+Solver.Loop.data_output_step = 100
+
 Solver.Phases = {[(Grain0),()],[(Grain1),()]} 
 
 ###### models 1 - standard allen-chan , 2 - pair-wise , 3 - cahn-hilliard

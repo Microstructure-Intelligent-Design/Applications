@@ -1,0 +1,119 @@
+###### whether to test this input file
+InputFile.debug = true
+
+Solver.Phases = {[(liquid),(Cu,Li)],[(LiSn),(Cu,Li)],[(Li7Sn3),(Cu,Li)],[(CuLi2Sn2),(Cu,Li)],[(Cu2LiSn),(Cu,Li)],[(Cu),(Cu,Li)],[(CuLi2Sn),(Cu,Li)]} 
+Solver.Comps = (Cu,Li)
+
+# ModelsManager.Phi.equation : 0 - Const, 1 - AllenCahn Standard, 2 - AllenCahn Pairwise, 3 - CahnHilliard Standard
+ModelsManager.Phi.equation = 2
+# ModelsManager.Con.equation : 0 - Const, 1 - TotalConcentration, 2 - PhaseConcentration, 3 - GrandPotential
+ModelsManager.Con.equation = 2
+# ModelsManager.PhiCon.BulkEnergy.type : 8 - HighOrder
+ModelsManager.PhiCon.BulkEnergy.type = 7
+# High Order Multivariate Linear Equation : f(xi) = sum_i{ sum_j[ Aij * xi^j ] }, i: component, j: order
+ModelsManager.Phi.BulkEnergy.liquid = [(0.0),(0.0)]
+ModelsManager.Phi.BulkEnergy.LiSn = [(f_LiSn_A00,f_LiSn_A01,f_LiSn_A02),(f_LiSn_A10,f_LiSn_A11,f_LiSn_A12)]
+ModelsManager.Phi.BulkEnergy.Li7Sn3 = [(f_Li7Sn3_A00,f_Li7Sn3_A01,f_Li7Sn3_A02),(f_Li7Sn3_A10,f_Li7Sn3_A11,f_Li7Sn3_A12)]
+ModelsManager.Phi.BulkEnergy.CuLi2Sn2 = [(f_CuLi2Sn2_A00,f_CuLi2Sn2_A01,f_CuLi2Sn2_A02),(f_CuLi2Sn2_A10,f_CuLi2Sn2_A11,f_CuLi2Sn2_A12)]
+ModelsManager.Phi.BulkEnergy.Cu2LiSn = [(f_Cu2LiSn_A00,f_Cu2LiSn_A01,f_Cu2LiSn_A02),(f_Cu2LiSn_A10,f_Cu2LiSn_A11,f_Cu2LiSn_A12)]
+ModelsManager.Phi.BulkEnergy.Cu = [(f_Cu_A00,f_Cu_A01,f_Cu_A02),(f_Cu_A10,f_Cu_A11,f_Cu_A12)]
+ModelsManager.Phi.BulkEnergy.CuLi2Sn = [(f_CuLi2Sn_A00,f_CuLi2Sn_A01,f_CuLi2Sn_A02),(f_CuLi2Sn_A10,f_CuLi2Sn_A11,f_CuLi2Sn_A12)]
+
+# Preprocess.plotChemEnergy = {[(plot_phase_name),(fix_con_name, ... ),(fix_value, ...)], ... }
+# Preprocess.plotChemEnergy = {[(LiSn),(),()]}
+Preprocess.plotChemEnergy = {[(LiSn),(),()],[(Li7Sn3),(),()],[(CuLi2Sn2),(),()],[(Cu2LiSn),(),()],[(Cu),(),()],[(CuLi2Sn),(),()]}
+Preprocess.PlotChemEnergy.con_epsilon = 0.01
+
+
+######################### define custom variables and functions #########################
+# Define.Var = A,0.1
+# Define.Func = ABC@{[(A*PHI<1>)]}@
+# default field variables: "PHI", "dPHI_dt", "lap_PHI", "PHI_X", "dPHI_X_dt", "X", "dX_dt"
+#                          "T", "dT_dt", "lap_T", "P", "dP_dt", "lap_P", "PHI_P", "dPHI_P_dt", "lap_PHI_P"
+# default functions      : "pow", "sqrt", "abs", "exp", "ln", "log", "sin", "cos", "tan", "asin", "acos", "atan"
+#########################################################################################
+# ref state
+Define.Var = Temp,300.0
+Define.Var = GAS_CONST,8.31441
+# 298.14 K < Temp < 1357.77 K -7770.458+130.485235*Temp-24.112392*Temp*log(Temp)-0.00265684*Temp*Temp+1.29223e-7*Temp*Temp*Temp+52478/Temp
+Define.Var = G_Cu_BCC,-9945.1
+# 200.00 K < Temp < 453.60  K -10583.817+217.637482*Temp-38.940488*Temp*log(Temp)+0.035466931*Temp*Temp-1.9869816e-5*Temp*Temp*Temp+159994/Temp
+Define.Var = G_Li_FCC,-8736.1
+# 250.00 K < Temp < 505.08  K -5855.135+65.443315*Temp-15.961*Temp*log(Temp)-0.0188702*Temp*Temp+3.121167e-6*Temp*Temp*Temp-61960/Temp
+Define.Var = G_Sn_BCT,-15354
+# --------------------
+# Gibbs energy
+Define.Var = LiSn_Cu_eq,0.0
+Define.Var = LiSn_Li_eq,0.5
+Define.Func = g_LiSn@{[LiSn_Cu_eq*G_Cu_BCC+LiSn_Li_eq*G_Li_FCC+(1.0-LiSn_Cu_eq-LiSn_Li_eq)*G_Sn_BCT-33310.0]}@
+Define.Var = Li7Sn3_Cu_eq,0.0
+Define.Var = Li7Sn3_Li_eq,0.7
+Define.Func = g_Li7Sn3@{[Li7Sn3_Cu_eq*G_Cu_BCC+Li7Sn3_Li_eq*G_Li_FCC+(1.0-Li7Sn3_Cu_eq-Li7Sn3_Li_eq)*G_Sn_BCT-39620.0]}@
+Define.Var = CuLi2Sn2_Cu_eq,0.2
+Define.Var = CuLi2Sn2_Li_eq,0.4
+Define.Func = g_CuLi2Sn2@{[CuLi2Sn2_Cu_eq*G_Cu_BCC+CuLi2Sn2_Li_eq*G_Li_FCC+(1.0-CuLi2Sn2_Cu_eq-CuLi2Sn2_Li_eq)*G_Sn_BCT-32595.0]}@
+Define.Var = Cu2LiSn_Cu_eq,0.5
+Define.Var = Cu2LiSn_Li_eq,0.25
+Define.Func = g_Cu2LiSn@{[Cu2LiSn_Cu_eq*G_Cu_BCC+Cu2LiSn_Li_eq*G_Li_FCC+(1.0-Cu2LiSn_Cu_eq-Cu2LiSn_Li_eq)*G_Sn_BCT-20776.0]}@
+Define.Var = Cu_Cu_eq,1.0
+Define.Var = Cu_Li_eq,0.0
+Define.Func = g_Cu@{[Cu_Cu_eq*G_Cu_BCC+Cu_Li_eq*G_Li_FCC+(1.0-Cu_Cu_eq-Cu_Li_eq)*G_Sn_BCT+G_Cu_BCC]}@
+Define.Var = CuLi2Sn_Cu_eq,0.25
+Define.Var = CuLi2Sn_Li_eq,0.5
+Define.Func = g_CuLi2Sn@{[CuLi2Sn_Cu_eq*G_Cu_BCC+CuLi2Sn_Li_eq*G_Li_FCC+(1.0-CuLi2Sn_Cu_eq-CuLi2Sn_Li_eq)*G_Sn_BCT-33230.0]}@
+# --------------------
+Define.Var = A,500
+Define.Var = Vm,1.0
+Define.Func = EnergyStandard@{[(Temp*GAS_CONST/Vm)]}@
+Define.Func = f_LiSn@{[(g_LiSn<0>/Vm/EnergyStandard<0>)]}@
+Define.Func = f_Li7Sn3@{[(g_Li7Sn3<0>/Vm/EnergyStandard<0>)]}@
+Define.Func = f_CuLi2Sn2@{[(g_CuLi2Sn2<0>/Vm/EnergyStandard<0>)]}@
+Define.Func = f_Cu2LiSn@{[(g_Cu2LiSn<0>/Vm/EnergyStandard<0>)]}@
+Define.Func = f_Cu@{[(g_Cu<0>/Vm/EnergyStandard<0>)]}@
+Define.Func = f_CuLi2Sn@{[(g_CuLi2Sn<0>/Vm/EnergyStandard<0>)]}@
+# --------------------
+# parameters for High Order Multivariate Linear Equations
+# energy model : f_{elec\_chem}^\alpha=A\sum_{i=1}^{K-1}\left(x_i^\alpha-x_{i,eq}^\alpha\right)^2+\left(V_m\right)^{-1}G_m^\alpha\left(T\right)
+# A00 = A*x_{eq}^2+f/2, A01 = -2A*x_{eq}, A02 = A
+# LiSn phase
+Define.Func = f_LiSn_A00@{[(A*LiSn_Cu_eq*LiSn_Cu_eq+f_LiSn<0>/2.0)]}@
+Define.Func = f_LiSn_A01@{[(-2.0*A*LiSn_Cu_eq)]}@
+Define.Func = f_LiSn_A02@{[(A)]}@
+Define.Func = f_LiSn_A10@{[(A*LiSn_Li_eq*LiSn_Li_eq+f_LiSn<0>/2.0)]}@
+Define.Func = f_LiSn_A11@{[(-2.0*A*LiSn_Li_eq)]}@
+Define.Func = f_LiSn_A12@{[(A)]}@
+# Li7Sn3 phase
+Define.Func = f_Li7Sn3_A00@{[(A*Li7Sn3_Cu_eq*Li7Sn3_Cu_eq+f_Li7Sn3<0>/2.0)]}@
+Define.Func = f_Li7Sn3_A01@{[(-2.0*A*Li7Sn3_Cu_eq)]}@
+Define.Func = f_Li7Sn3_A02@{[(A)]}@
+Define.Func = f_Li7Sn3_A10@{[(A*Li7Sn3_Li_eq*Li7Sn3_Li_eq+f_Li7Sn3<0>/2.0)]}@
+Define.Func = f_Li7Sn3_A11@{[(-2.0*A*Li7Sn3_Li_eq)]}@
+Define.Func = f_Li7Sn3_A12@{[(A)]}@
+# CuLi2Sn2 phase
+Define.Func = f_CuLi2Sn2_A00@{[(A*CuLi2Sn2_Cu_eq*CuLi2Sn2_Cu_eq+f_CuLi2Sn2<0>/2.0)]}@
+Define.Func = f_CuLi2Sn2_A01@{[(-2.0*A*CuLi2Sn2_Cu_eq)]}@
+Define.Func = f_CuLi2Sn2_A02@{[(A)]}@
+Define.Func = f_CuLi2Sn2_A10@{[(A*CuLi2Sn2_Li_eq*CuLi2Sn2_Li_eq+f_CuLi2Sn2<0>/2.0)]}@
+Define.Func = f_CuLi2Sn2_A11@{[(-2.0*A*CuLi2Sn2_Li_eq)]}@
+Define.Func = f_CuLi2Sn2_A12@{[(A)]}@
+# Cu2LiSn phase
+Define.Func = f_Cu2LiSn_A00@{[(A*Cu2LiSn_Cu_eq*Cu2LiSn_Cu_eq+f_Cu2LiSn<0>/2.0)]}@
+Define.Func = f_Cu2LiSn_A01@{[(-2.0*A*Cu2LiSn_Cu_eq)]}@
+Define.Func = f_Cu2LiSn_A02@{[(A)]}@
+Define.Func = f_Cu2LiSn_A10@{[(A*Cu2LiSn_Li_eq*Cu2LiSn_Li_eq+f_Cu2LiSn<0>/2.0)]}@
+Define.Func = f_Cu2LiSn_A11@{[(-2.0*A*Cu2LiSn_Li_eq)]}@
+Define.Func = f_Cu2LiSn_A12@{[(A)]}@
+# Cu phase
+Define.Func = f_Cu_A00@{[(A*Cu_Cu_eq*Cu_Cu_eq+f_Cu<0>/2.0)]}@
+Define.Func = f_Cu_A01@{[(-2.0*A*Cu_Cu_eq)]}@
+Define.Func = f_Cu_A02@{[(A)]}@
+Define.Func = f_Cu_A10@{[(A*Cu_Li_eq*Cu_Li_eq+f_Cu<0>/2.0)]}@
+Define.Func = f_Cu_A11@{[(-2.0*A*Cu_Li_eq)]}@
+Define.Func = f_Cu_A12@{[(A)]}@
+# CuLi2Sn phase
+Define.Func = f_CuLi2Sn_A00@{[(A*CuLi2Sn_Cu_eq*CuLi2Sn_Cu_eq+f_CuLi2Sn<0>/2.0)]}@
+Define.Func = f_CuLi2Sn_A01@{[(-2.0*A*CuLi2Sn_Cu_eq)]}@
+Define.Func = f_CuLi2Sn_A02@{[(A)]}@
+Define.Func = f_CuLi2Sn_A10@{[(A*CuLi2Sn_Li_eq*CuLi2Sn_Li_eq+f_CuLi2Sn<0>/2.0)]}@
+Define.Func = f_CuLi2Sn_A11@{[(-2.0*A*CuLi2Sn_Li_eq)]}@
+Define.Func = f_CuLi2Sn_A12@{[(A)]}@
