@@ -1,5 +1,5 @@
-# MInDes_release
-A repository for some ongoing or completed work developed based on the MInDes code package (https://github.com/hq5088028/MInDes).
+# MInDes Applications
+A repository for some ongoing or completed work developed based on the MInDes code package (https://github.com/Microstructure-Intelligent-Design/MInDes).
 
 Each version contains the executable file for linux systems (**MInDes**) and the executable file for 64-bit Windows systems (**MInDes.exe**). Please double-click directly for the use of **MInDes.exe** in WINDOWS SYSTEM or refer to the following steps to use the execution file **MInDes** in LINUX SYSTEM:  
 **1. Check the execution file MInDes:**  
@@ -9,13 +9,13 @@ Each version contains the executable file for linux systems (**MInDes**) and the
 **3. Find the output files (same path as input file):**  
 cd infile/1_nucleation/ellipse/
 
-**Note 1: Please follow the input file (.mindes) in the 0_basic_infile folder to learn the function of MInDes step by step.**
+**Note 1: Please follow the input file (.mindes) in the 0_basic_infile folder to learn functions of developed MInDes step by step.**
 
 **Note 2: The simulation consumes memory and occupies the processor, please pay attention to the consumption of computing resources in real time to avoid potential problems !!!**
 
 **Have fun !**
 
-# About MInDes
+# About MInDes code package
 \- **M**icrostructure **In**telligent **Des**ign Software
 
 Copyright (c) 2019-2023 **Science center for phase diagram, phase transition, material intelligent design and manufacture, Central South University, China**
