@@ -1,0 +1,97 @@
+###### whether to test this input file
+InputFile.debug = true
+
+###### solver init
+Solver.Disperse.Nx = 100
+Solver.Disperse.Ny = 100
+Solver.Disperse.Nz = 1
+Solver.Disperse.begin_step = 0
+Solver.Disperse.end_step = 2000
+Solver.Disperse.dt = 1e-2
+Solver.Disperse.dr = 1
+# 0 - FIXED, 1 - PERIODIC, 2 - ADIABATIC
+Solver.BoundaryCondition.x_up = 1
+Solver.BoundaryCondition.x_down = 1
+Solver.BoundaryCondition.y_up = 1
+Solver.BoundaryCondition.y_down = 1
+Solver.BoundaryCondition.z_up = 1
+Solver.BoundaryCondition.z_dowm = 1
+###### files output system
+Solver.Files.screen_output_step = 100
+Solver.Files.vts_output_step = 100
+Solver.Files.data_output_step = 10000
+Solver.Files.is_phi_output = true
+Solver.PhaseField.normalize_phi = true
+
+###### modules init
+Modules.intEnergy = true
+Modules.intMobility = true
+Modules.nucleation = true
+Modules.electric_field = true
+
+###### phase equation init
+# 0 - ACType_Const, 1 - ACType_Standard, 2 - ACType_Pairwise
+Solver.AllenCahnEquation.Type = 2
+# [(phi_name), (comp_0, comp_1, .... )]
+Solver.PhaseField.property = {[(Grain0),()],[(Grain1),()]}
+
+# 0 - Steinbach_1996, 1 - Steinbach_1999, 2 - Steinbach_G2009, 3 - Int_GCustom
+Modules.InterfaceEnergy.int_gradient = 0
+
+# 0 - Nestler_Well, 1 - Nestler_Obstacle, 2 - Steinbach_P2009, 3 - Int_PCustom
+Modules.InterfaceEnergy.int_potential = 1
+
+###### concentration equation init
+Solver.ConcentrationField.component = ()
+# { 0 - CHType_Const, 1 - CHType_TotalX, 2 - CHType_PhaseX, 3 - CHType_GrandP };
+Solver.CahnHilliardEquation.Type = 0
+
+###### temperature equation init
+# { 0 - TType_Const, 1 - TType_Standard };
+Solver.TemperatureEquation.Type = 0
+
+###### nucleation
+# {[(phi_index),(phi_comp_0_value, phi_comp_1_value, ... )],[(total_comp_0_value, total_comp_1_value, ... )],[(temp_value)]}
+Modules.Nucleation.matrix = {[(0),(Grain0),()],[()],[(0)]}
+
+# 0 - DefiniteNucleation, 1 - ConditionalNucleation, 2 - UserDefined_Nucleated
+Modules.Nucleation.type = 0
+
+Modules.Nucleation.geometry_layer_number = 1
+
+# .property = (phase_index, phase_name, geometry_type, generate_step, rotation_gauge, reverse_filling)
+# 		geometry_type  : 0 - Geo_None, 1 - Geo_Ellipsoid, 2 - Geo_Polyhedron
+# 		rotation_gauge : 0 - RG_XYX, 1 - RG_XZX, 2 - RG_YXY, 3 - RG_YZY, 4 - RG_ZXZ,  5 - RG_ZYZ
+#                  		 6 - RG_XYZ, 7 - RG_XZY, 8 - RG_YXZ, 9 - RG_YZX, 10 - RG_ZXY, 11 - RG_ZYX 
+# .ellipsoid = [(core_x,core_y,core_z),(radius_x,radius_y,radius_z),(rotation_radian_1,rotation_radian_2,rotation_radian_3)]
+# .polyhedron = {[(inside_point)],[(surf_point),(surf_point),(surf_point)], .... ,[(rotation_radian)]}
+# .T = double()
+# .x = [(comp_0_name,comp_0_value), ...]
+# .custom_int = [(custom_int_0_index, custom_int_0_value), ...]
+# .custom_double = [(custom_double_0_index, custom_double_0_value), ...]
+# .custom_vec3 = [(custom_vec3_0_index, custom_vec3_0_value_0, custom_vec3_0_value_1, custom_vec3_0_value_2), ...]
+# .custom_vec6 = [(custom_vec6_0_index, custom_vec6_0_value_0, custom_vec6_0_value_1, custom_vec6_0_value_2, custom_vec6_0_value_3, custom_vec6_0_value_4, custom_vec6_0_value_5), ...]
+Modules.Nucleation.geometry_layer_0.property = (1,Grain1,1,0,1,false)
+Modules.Nucleation.geometry_layer_0.ellipsoid = [(50,50,0),(15,15,0),(0,0,0)]
+
+###### Mobility
+# MOBILITY_TYPE{ 0 - MOBILITY_CONST, 1 - MOBILITY_MATRIX };
+Modules.Mobility.type = 0
+Modules.Mobility.Lij.const = 1.0
+
+###### InterfaceEnergy
+# XI_TYPE { 0 - XI_CONST, 1 = XI_MATRIX };
+Modules.InterfaceEnergy.xi_ab.type = 0
+Modules.InterfaceEnergy.xi_ab.const = 1.0
+Modules.InterfaceEnergy.xi_abc.type = 0
+Modules.InterfaceEnergy.xi_abc.const = 0.0
+
+###### ElectricField
+Modules.ElectricField.accuracy = 0.0001
+Modules.ElectricField.max_iteration_steps = 1000
+Modules.ElectricField.conductivity = (1,1)
+Modules.ElectricField.debug = false
+Modules.ElectricField.Debug.output_steps = 100
+Modules.ElectricField.fix_boundary.type = (true,true,true,true,false,false)
+Modules.ElectricField.fix_boundary.value = (0,0,0,0,0,0)
+Modules.ElectricField.fix_phi = [(Grain1,1)]
