@@ -1,0 +1,50 @@
+###### whether to test this input file
+InputFile.debug = true
+
+###### Init Solver
+Solver.Mesh.Nx = 200
+Solver.Mesh.Ny = 200
+Solver.Mesh.Nz = 1
+Solver.Loop.begin_step = 0
+Solver.Loop.end_step = 1000
+Solver.PCT.TimeInterval.dt = 0.01
+# Solver.PCT.TimeInterval.auto_adjust = (delt_step,max_scale,is_reduce_output)
+Solver.PCT.TimeInterval.auto_adjust = (10,1e3,true)
+Solver.PCT.phi_increment_limit = 0.01
+Postprocess.PCT.VTS.phi_index = true
+Solver.Phi.is_normalize = true
+
+# This key is used to accelerate multigrain evolution
+# Solver.PairWise.accelerate = TRUE
+
+Solver.Parallel.openmp_thread_counts = 10
+
+Solver.Phases = {[(Grain0),()]}
+
+Solver.Loop.screen_loop_step = 10
+Solver.Loop.vts_output_step = 100
+
+# ModelsManager.Phi.equation : 0 - Const, 1 - AllenCahn Standard, 2 - AllenCahn Pairwise, 3 - CahnHilliard Standard
+ModelsManager.Phi.equation = 2
+# ModelsManager.Phi.Lij.const  = Lij_value 
+#                      .matrix = [(phi_i, phi_j, Lij_value), ... ] 
+#                      .block = [(phi_begin, phi_end, Lij_value), ... ] 
+ModelsManager.Phi.Lij.const = 1.000000
+# ModelsManager.Phi.InterfaceEnergy.int_gradient : 0 - Steinbach_1996 , 1 - Steinbach_1999 , 2 - Steinbach_G2009
+ModelsManager.Phi.InterfaceEnergy.int_gradient = 2
+# ModelsManager.Phi.InterfaceEnergy.int_potential : 0 - Nestler_Well , 1 - Nestler_Obstacle , 2 - Steinbach_P2009
+ModelsManager.Phi.InterfaceEnergy.int_potential = 2
+ModelsManager.Phi.InterfaceEnergy.int_width = 4.000000
+# ModelsManager.Phi.xi_ab.const  = xi_ab 
+#                        .matrix = [(phi_a, phi_b, xi_ab_value), ...] 
+ModelsManager.Phi.xi_ab.const = 1.000000
+# ModelsManager.Phi.xi_abc.const  = xi_ab 
+#                         .matrix = [(phi_a, phi_b, phi_c, xi_abc_value), ...] 
+ModelsManager.Phi.xi_abc.const = 0.000000
+
+###### Microstructure
+Preprocess.Microstructure.matrix = {[(0),(Grain0),()],[()],[(0.0)]}
+Preprocess.Microstructure.voronoi.property = [(0,100),(Grain0),(1)]
+Preprocess.Microstructure.voronoi.box = [(0,0,0),(200,200,0)]
+Preprocess.Microstructure.voronoi.rand_seed = 10
+Preprocess.Microstructure.voronoi.point_distance = 17

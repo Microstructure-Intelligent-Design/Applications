@@ -17,7 +17,7 @@ Solver.Loop.vts_output_step = 10000
 
 ###### Microstructure
 Preprocess.Microstructure.is_datafile_init = true
-Preprocess.Microstructure.datafile_path = merge_phis_auto.dat
+Preprocess.Microstructure.datafile_path = merge_phis.dat
 # Preprocess.Microstructure.matrix = {[(0),(Grain0),()],[()],[(0.0)]}
 # Preprocess.Microstructure.voronoi.property = [(1,20),(Grain0),(1)]
 # Preprocess.Microstructure.voronoi.box = [(0,0,0),(100,100,0)]
