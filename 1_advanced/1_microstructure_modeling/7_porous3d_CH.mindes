@@ -1,0 +1,51 @@
+###### whether to test this input file
+InputFile.debug = true
+
+###### Init Solver
+Solver.Mesh.Nx = 64
+Solver.Mesh.Ny = 64
+Solver.Mesh.Nz = 64
+Postprocess.PCT.VTS.phi = true
+
+Solver.Parallel.openmp_thread_counts = 10
+
+Solver.Loop.begin_step = 0
+Solver.Loop.end_step = 1000
+
+Solver.Loop.screen_loop_step = 1
+Solver.Loop.screen_output_step = 100
+Solver.Loop.vts_output_step = 100
+
+Solver.PCT.TimeInterval.dt = 0.01
+
+Solver.Phi.is_normalize = true
+
+Solver.Phases = {[(Grain0),()]}
+
+###### Microstructure
+Preprocess.Microstructure.matrix = {[(0),(Grain0),()],[()],[(0.0)]}
+
+# Preprocess.Microstructure.porous = (porosity, noise_level, is_invert) 
+Preprocess.Microstructure.porous = (0.5,0.001,true)
+Preprocess.Microstructure.porous.rand_seed = 0
+# .phi = (phi_index, phi_name, phi_fraction) 
+Preprocess.Microstructure.porous.phi = (1,Grain0,1.0)
+Preprocess.Microstructure.porous.temperature = 0.000000
+Preprocess.Microstructure.porous.is_normalized = TRUE
+
+# ModelsManager.Phi.equation : 0 - Const, 1 - AllenCahn Standard, 2 - AllenCahn Pairwise, 3 - CahnHilliard Standard
+ModelsManager.Phi.equation = 3
+# ModelsManager.Phi.Mij.const  = Mij_value 
+#                      .matrix = [(phi_i, phi_j, Mij_value), ... ] 
+#                      .block = [(phi_begin, phi_end, Mij_value), ... ] 
+ModelsManager.Phi.Mij.const = 1.000000
+# ModelsManager.Phi.InterfaceEnergy.int_gradient : 3 - Int_GStandard
+ModelsManager.Phi.InterfaceEnergy.int_gradient = 3
+# ModelsManager.Phi.xi_a.const  = xi_a 
+#                       .matrix = [(phi_a, xi_a_value), ...] 
+ModelsManager.Phi.xi_a.const = 1.000000
+# ModelsManager.PhiCon.BulkEnergy.type : 1 - DoubleWell, 2 - LQ_Chen, 3 - H_Liang , 7 - HighOrder
+ModelsManager.PhiCon.BulkEnergy.type = 1
+ModelsManager.PhiCon.BulkEnergy.DoubleWell.A = 2.000000
+ModelsManager.PhiCon.BulkEnergy.DoubleWell.B = 0.000000
+
