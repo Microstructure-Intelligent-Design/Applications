@@ -1,0 +1,27 @@
+###### whether to test this input file
+InputFile.debug = true
+
+###### Init Solver
+Solver.Mesh.Nx = 64
+Solver.Mesh.Ny = 64
+Solver.Mesh.Nz = 64
+Postprocess.PCT.VTS.phi_index = true
+Solver.Parallel.openmp_thread_counts = 10
+
+Solver.Phases = {[(Grain0),()]} 
+
+Solver.Loop.vts_output_step = 1000
+
+###### Microstructure
+Preprocess.Microstructure.matrix = {[(0),(Grain0),()],[()],[(0.0)]}
+Preprocess.Microstructure.voronoi.property = [(0,100),(Grain0),(1)]
+Preprocess.Microstructure.voronoi.box = [(0,0,0),(64,64,64)]
+Preprocess.Microstructure.voronoi.rand_seed = 10
+# Preprocess.Microstructure.voronoi.const_distance = 0.0 
+#                                  .ref_dot = [(REF_DOT), (distance, min_points_distance, max_points_distance)] 
+#                                  .ref_surface = [(REF_SURF_POINT_1), (REF_SURF_POINT_2), (REF_SURF_POINT_3), (distance, min_points_distance, max_points_distance)] 
+#                                  .dots_matrix = [(DOT1, points_distances1), (DOT2, points_distances2), ... ] 
+Preprocess.Microstructure.voronoi.const_distance = 17
+# Preprocess.Microstructure.voronoi.ref_dot = [(32,32,32),(30,3,20)]
+# Preprocess.Microstructure.voronoi.ref_surface = [(32,0,0),(32,64,0),(32,64,64),(30,5,30)]
+# Preprocess.Microstructure.voronoi.dots_matrix = [(10,10,10,3),(54,54,54,32)]

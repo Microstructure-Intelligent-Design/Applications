@@ -1,0 +1,80 @@
+###### whether to test this input file
+InputFile.debug = true
+
+Solver.Phases = {[(FCC_A1),(Al,Co)],[(FCC_L12),(Al,Co)]}
+Solver.Comps = (Al,Co)
+
+###### models 1 - standard allen-chan , 2 - pair-wise , 3 - cahn-hilliard
+ModelsManager.Phi.equation = 2
+# ModelsManager.Con.equation : 0 - Const, 1 - TotalConcentration, 2 - PhaseConcentration, 3 - GrandPotential
+ModelsManager.Con.equation = 2
+# ModelsManager.PhiCon.BulkEnergy.type : 3 - HighOrder, 4 - HighOrderNComp
+ModelsManager.PhiCon.BulkEnergy.type = 4
+
+# High Order N Components Equation : f(x, y, ... ) = sum_ijkl[ Aijkl * w^i * x^j * y^j * z^j ], i, j, k, l, ... : order
+ModelsManager.Phi.BulkEnergy.FCC_A1 = {[(0,0),(G_FCC_A1_A00)],[(1,0),(G_FCC_A1_A10)],[(0,1),(G_FCC_A1_A01)],[(2,0),(G_FCC_A1_A20)],[(1,1),(G_FCC_A1_A11)],[(0,2),(G_FCC_A1_A02)],[(3,0),(G_FCC_A1_A30)],[(2,1),(G_FCC_A1_A21)],[(1,2),(G_FCC_A1_A12)]}
+ModelsManager.Phi.BulkEnergy.FCC_L12 = {[(0,0),(G_FCC_L12_A00)],[(1,0),(G_FCC_L12_A10)],[(0,1),(G_FCC_L12_A01)],[(2,0),(G_FCC_L12_A20)],[(1,1),(G_FCC_L12_A11)],[(0,2),(G_FCC_L12_A02)],[(3,0),(G_FCC_L12_A30)],[(2,1),(G_FCC_L12_A21)],[(1,2),(G_FCC_L12_A12)]}
+
+# Preprocess.plotChemEnergy = {[(plot_phase_name),(fix_con_name, ... ),(fix_value, ...)], ... }
+Preprocess.plotChemEnergy = {[(FCC_A1),(),()],[(FCC_L12),(),()]}
+Preprocess.PlotChemEnergy.con_epsilon = 0.01
+
+######################### define custom variables and functions #########################
+# Define.Var = A,0.1
+# Define.Func = ABC@{[(A*PHI<1>)]}@
+# default field variables: "PHI", "dPHI_dt", "lap_PHI", "PHI_X", "dPHI_X_dt", "X", "dX_dt"
+#                          "T", "dT_dt", "lap_T", "P", "dP_dt", "lap_P", "PHI_P", "dPHI_P_dt", "lap_PHI_P"
+# default functions      : "pow", "sqrt", "abs", "exp", "ln", "log", "sin", "cos", "tan", "asin", "acos", "atan"
+#########################################################################################
+# ref state
+Define.Var = Temp,1373.0
+Define.Var = GAS_CONST,8.31441
+Define.Var = Vm,1e-5
+Define.Func = MolarEnergyStandard@{[(Temp*GAS_CONST)]}@
+# ---------------------------------------------------------------------------------------
+# Al-Co-Ni FCC_A1
+# f = A00             + A01 * y             + A02 * y * y         
+#   + A10 * x         + A11 * x * y         + A12 * x * y * y     
+#   + A20 * x * x     + A21 * x * x * y     + A22 * x * x * y * y 
+#   + A30 * x * x * x + A31 * x * x * x * y + A32 * x * x * x * y * y 
+Define.Var = GM_FCC_A1_A00,-7.204e4
+Define.Var = GM_FCC_A1_A10,-1.891e5
+Define.Var = GM_FCC_A1_A01,-3.075e4
+Define.Var = GM_FCC_A1_A20,2.396e5
+Define.Var = GM_FCC_A1_A11,6.172e4
+Define.Var = GM_FCC_A1_A02,3.07e4
+Define.Var = GM_FCC_A1_A30,-4.604e4
+Define.Var = GM_FCC_A1_A21,-3995
+Define.Var = GM_FCC_A1_A12,3.972e4
+# - EnergyStandard
+Define.Func = G_FCC_A1_A00@{[(GM_FCC_A1_A00/MolarEnergyStandard<0>)]}@
+Define.Func = G_FCC_A1_A10@{[(GM_FCC_A1_A10/MolarEnergyStandard<0>)]}@
+Define.Func = G_FCC_A1_A01@{[(GM_FCC_A1_A01/MolarEnergyStandard<0>)]}@
+Define.Func = G_FCC_A1_A20@{[(GM_FCC_A1_A20/MolarEnergyStandard<0>)]}@
+Define.Func = G_FCC_A1_A11@{[(GM_FCC_A1_A11/MolarEnergyStandard<0>)]}@
+Define.Func = G_FCC_A1_A02@{[(GM_FCC_A1_A02/MolarEnergyStandard<0>)]}@
+Define.Func = G_FCC_A1_A30@{[(GM_FCC_A1_A30/MolarEnergyStandard<0>)]}@
+Define.Func = G_FCC_A1_A21@{[(GM_FCC_A1_A21/MolarEnergyStandard<0>)]}@
+Define.Func = G_FCC_A1_A12@{[(GM_FCC_A1_A12/MolarEnergyStandard<0>)]}@
+# ---------------------------------------------------------------------------------------
+# Al-Co-Ni FCC_L12
+Define.Var = GM_FCC_L12_A00,-7.174e4
+Define.Var = GM_FCC_L12_A10,-1.931e5
+Define.Var = GM_FCC_L12_A01,-3.134e4
+Define.Var = GM_FCC_L12_A20,2.322e5
+Define.Var = GM_FCC_L12_A11,7.121e4
+Define.Var = GM_FCC_L12_A02,3.089e4
+Define.Var = GM_FCC_L12_A30,-3.43e4
+Define.Var = GM_FCC_L12_A21,1011
+Define.Var = GM_FCC_L12_A12,3.562e4
+# - EnergyStandard
+Define.Func = G_FCC_L12_A00@{[(GM_FCC_L12_A00/MolarEnergyStandard<0>)]}@
+Define.Func = G_FCC_L12_A10@{[(GM_FCC_L12_A10/MolarEnergyStandard<0>)]}@
+Define.Func = G_FCC_L12_A01@{[(GM_FCC_L12_A01/MolarEnergyStandard<0>)]}@
+Define.Func = G_FCC_L12_A20@{[(GM_FCC_L12_A20/MolarEnergyStandard<0>)]}@
+Define.Func = G_FCC_L12_A11@{[(GM_FCC_L12_A11/MolarEnergyStandard<0>)]}@
+Define.Func = G_FCC_L12_A02@{[(GM_FCC_L12_A02/MolarEnergyStandard<0>)]}@
+Define.Func = G_FCC_L12_A30@{[(GM_FCC_L12_A30/MolarEnergyStandard<0>)]}@
+Define.Func = G_FCC_L12_A21@{[(GM_FCC_L12_A21/MolarEnergyStandard<0>)]}@
+Define.Func = G_FCC_L12_A12@{[(GM_FCC_L12_A12/MolarEnergyStandard<0>)]}@
+# ---------------------------------------------------------------------------------------
